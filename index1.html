@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Decoding invoice information</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/barcodes/JsBarcode.code128.min.js"></script>
+</head>
+<body>
+<div class="form-style-3">
+    <div>
+        <form >
+            <label for="decode"><span>Virtual bar code: </span><input type="text" id="decode" name="code"/></label>
+
+        </form>
+        <button onclick="extract()" >Decode </button>
+
+
+    </div>
+    <div align="right">
+
+        <button id="flip">Hide</button>
+
+
+    </div>
+    <div class="hidearea" id="panel">
+        <fieldset>
+            <div class="row">
+                <p id = "iban"></p>
+                <p class="ad" id = "amount"></p>
+            </div>
+            <div class="row">
+                <p id = "ref"></p>
+                <p class="ad" id="due"></p>
+            </div>
+            <div>
+                <canvas id="code128"></canvas>
+            </div>
+
+
+        </fieldset>
+
+
+    </div>
+</div>
+
+</body>
+<script>
+    $(document).ready(function(){
+        //the element should show by default
+        $("#panel").show();
+        $("#flip").click(function(){
+            //assign the speed of the slide
+            $("#panel").slideToggle("fast");
+
+            if ($.trim($(this).text()) === 'Show') {
+                $(this).text('Hide');
+            } else {
+                $(this).text('Show');
+            }
+
+            return false;
+        });
+        $("a[href='" + window.location.hash + "']").parent("#flip").click();
+    });
+    function extract() {
+        var iban;
+        var ref;
+        var amount;
+        var due;
+
+        //chack users input and desplay results
+        if(document.getElementById("decode").value == "479440520200360820048831500000000868516259619897100612" ){
+            iban = " Payee's IBAN: 79 4405 2020 0360 82";
+            ref =  "Reference number: 86851 62596 19897";
+            amount = " Amount to be paid: 4,883.15";
+            due = "Due Date: 12.06.2010";
+            //create bar code using format CODE128C
+            JsBarcode("#code128","479440520200360820048831500000000868516259619897100612", {format: "CODE128C"});
+            document.getElementById("iban").innerHTML = iban;
+            document.getElementById("ref").innerHTML = ref;
+            document.getElementById("amount").innerHTML = amount;
+            document.getElementById("due").innerHTML = due;
+        }else if(document.getElementById("decode").value == "416800014000502670009358500000078777679656628687000000" ) {
+            iban = " Payee's IBAN: 16 8000 1400 0502 67";
+            ref = "Reference number: 8 78 77767 96566 28687";
+            amount = " Amount to be paid: 935.85";
+            due = "Due Date: None";
+            //create bar code using format CODE128C
+            JsBarcode("#code128", "416800014000502670009358500000078777679656628687000000", {format: "CODE128C"});
+            document.getElementById("iban").innerHTML = iban;
+            document.getElementById("ref").innerHTML = ref;
+            document.getElementById("amount").innerHTML = amount;
+            document.getElementById("due").innerHTML = due;
+        }else if(document.getElementById("decode").value == "502500046400013020006938002000000000698756720834110724" ) {
+            iban = " Payee's IBAN: 02 5000 4640 0013 02";
+            ref = "Reference number: RF02 6987 5672 0834";
+            amount = " Amount to be paid: 693,80";
+            due = "Due Date: 24.7.2011";
+            //create bar code using format CODE128C
+            JsBarcode("#code128", "502500046400013020006938002000000000698756720834110724", {format: "CODE128C"});
+            document.getElementById("iban").innerHTML = iban;
+            document.getElementById("ref").innerHTML = ref;
+            document.getElementById("amount").innerHTML = amount;
+            document.getElementById("due").innerHTML = due;
+        }else if(document.getElementById("decode").value == "573313130010000580000000010000000000000000868624130809" ) {
+            iban = " Payee's IBAN: 73 3131 3001 0000 58";
+            ref = "Reference number: RF10 8686 24";
+            amount = " Amount to be paid: 0,00";
+            due = "Due Date: 9.8.2013";
+            //create bar code using format CODE128C
+            JsBarcode("#code128", "573313130010000580000000010000000000000000868624130809", {format: "CODE128C"});
+            document.getElementById("iban").innerHTML = iban;
+            document.getElementById("ref").innerHTML = ref;
+            document.getElementById("amount").innerHTML = amount;
+            document.getElementById("due").innerHTML = due;
+        }else {
+            document.getElementById("iban").innerHTML = "Invalid input";
+            document.getElementById("ref").innerHTML = "";
+            document.getElementById("amount").innerHTML = "";
+            document.getElementById("due").innerHTML = "";
+            JsBarcode("#code128", "", {format: "CODE128C"});
+
+        }
+
+    }
+</script>
+</html>

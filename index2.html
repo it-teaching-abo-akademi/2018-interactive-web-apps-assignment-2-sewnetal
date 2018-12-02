@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Zip code location on a map</title>
+    <link rel="stylesheet" href="style2.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyALaQ4D7CpEWttxDhx7HIHxR0A_sRXVh8Y&callback=myMap"></script>
+
+</head>
+<body>
+<div >
+    <div class="col-4">
+            <label for="country"><span>Select your country</span><select name="country" id="country">
+                <option>Finland</option>
+                <option>Sweden</option>
+                <option>Germany</option>
+                <option>France</option>
+            </select></label>
+            <label for="Zip"><span>Zip code</span><input id="zip" name="zip" type="text"></label>
+            <input onclick="getzip()"  type="submit" value="Search">
+    </div>
+
+    <div class="col-6">
+        <h3 align="center">History of the last 10 search</h3>
+        <table class="table table-bordered">
+
+            <thead>
+            <tr>
+                <th>Country</th>
+                <th>Zip-Code</th>
+            </tr>
+            </thead>
+
+            <tbody id="search" >
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class=" col-7">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Place Name</th>
+                <th>Longitude</th>
+                <th>Latitude</th>
+            </tr>
+            </thead>
+            <tbody id="tr">
+
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-8" id="googleMap" style="width:60%;height:400px">
+
+
+    </div>
+</div>
+
+</body>
+
+<script>
+    function getzip() {
+        //get user input
+        var zip = document.getElementById("zip").value;
+        var client = new XMLHttpRequest();
+        //initialize request according to user input
+        if (document.getElementById("country").value== "Finland"){
+
+            client.open("GET", "http://api.zippopotam.us/FI/"+zip, true);
+
+        }else if (document.getElementById("country").value== "Sweden"){
+
+            client.open("GET", "http://api.zippopotam.us/SE/"+zip, true);
+
+        }else if (document.getElementById("country").value== "France"){
+
+            client.open("GET", "http://api.zippopotam.us/FR/"+zip, true);
+
+        }else if (document.getElementById("country").value== "Germany"){
+
+            client.open("GET", "http://api.zippopotam.us/DE/"+zip, true);
+        }
+
+        //check if the request finished and response is ready
+        client.onreadystatechange = function() {
+            if(this.readyState == 4 && this.status == 200) {
+                var longlat = JSON.parse(this.responseText);
+
+                //use the location coordinates to possition the map
+                var position = new google.maps.LatLng(longlat.places[0].latitude,longlat.places[0].longitude);
+                var mapProp= {
+                    center:position,
+                    zoom:10,
+                };
+
+                var map= new google.maps.Map(document.getElementById("googleMap"),mapProp);
+
+                var i;
+                var x = "";
+
+                //check if there is multiple results for user input and display on map
+                for (i in longlat.places) {
+                    x +="<tr>"+ "<td>"+longlat.places[i]["place name"]+
+                        "</td>"+"<td>"+longlat.places[i].longitude+ "</td>"+"<td>"+longlat.places[i].latitude+ "</td>"+"</tr>";
+
+                    var myLatLng = new google.maps.LatLng(longlat.places[i].latitude,longlat.places[i].longitude);
+
+                    var marker = new google.maps.Marker({
+                        position: myLatLng,
+                        map:map,
+                        title: zip
+                    });
+                }
+                document.getElementById("tr").innerHTML = x;
+            }
+        };
+        google.maps.event.addDomListener(window, 'load', getzip);
+
+        client.send();
+
+            //save the user input for country in localStorage "recored"
+            var itemsArray = [];
+            itemsArray = localStorage.getItem("record") ? JSON.parse(localStorage.getItem("record")) : [];
+            var search = document.getElementById("country").value;
+            itemsArray.push(search);
+            localStorage.setItem("record", JSON.stringify(itemsArray));
+            var data = [];
+            data = JSON.parse(localStorage.getItem("record"));
+
+        //save the user input for zip code in localStorage "zipcode"
+            var ziparray = [];
+            ziparray = localStorage.getItem("ziprecord") ? JSON.parse(localStorage.getItem("ziprecord")) : [];
+            var zip_code = document.getElementById("zip").value;
+            ziparray.push(zip_code);
+            localStorage.setItem("ziprecord", JSON.stringify(ziparray));
+            var zipdata = [];
+            zipdata = JSON.parse(localStorage.getItem("ziprecord"));
+
+            //reverse the arrays to get the latest first and display on 9
+            zipdata.reverse();
+            data.reverse();
+            var v = "";
+            for (var l = 0; l < data.length; l++){
+                v += "<tr>" + "<td>" + data[l]+ "</td>" + "<td>" + zipdata[l]+ "</td>" + "</tr>";
+                if (l === 9){
+                    break;
+                }
+            }
+        document.getElementById("search").innerHTML = v;
+    }
+
+
+</script>
+
+</html>
