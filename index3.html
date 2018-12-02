@@ -31,14 +31,12 @@
 
     document.getElementById("route").addEventListener("load", select_route());
 
-
-
     function select_route() {
 
         var gtfs = new XMLHttpRequest();
 
         //Initialize request
-        gtfs.open("GET", "http://data.foli.fi/gtfs/routes",true);
+        gtfs.open("GET", "https://data.foli.fi/gtfs/routes",true);
 
         //check if the request finished and response is ready
         gtfs.onreadystatechange = function () {
