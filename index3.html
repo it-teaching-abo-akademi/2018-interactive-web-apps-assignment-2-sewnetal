@@ -62,7 +62,7 @@
         var gtfs_trips = new XMLHttpRequest();
         var gtfs_shapes = new XMLHttpRequest();
           //Initialize request
-        gtfs_route.open("GET", "http://data.foli.fi/gtfs/routes",true);
+        gtfs_route.open("GET", "https://data.foli.fi/gtfs/routes",true);
 
         //check if the request finished and response is ready
         gtfs_route.onreadystatechange = function () {
@@ -79,7 +79,7 @@
 
             }
             // use the the route id of the selected route to initialize the request
-            gtfs_trips.open("GET", "http://data.foli.fi/gtfs/trips/route/"+id, true)
+            gtfs_trips.open("GET", "https://data.foli.fi/gtfs/trips/route/"+id, true)
 
             //check if the request finished and response is ready
             gtfs_trips.onreadystatechange = function () {
@@ -91,7 +91,7 @@
                 }
 
               // use the shape id to initialize the request
-            gtfs_shapes.open("GET", "http://data.foli.fi/gtfs/shapes/"+shapeid, true);
+            gtfs_shapes.open("GET", "https://data.foli.fi/gtfs/shapes/"+shapeid, true);
 
                 //check if the request finished and response is ready
             gtfs_shapes.onreadystatechange = function(){
@@ -140,7 +140,7 @@
         var vim = new XMLHttpRequest();
 
        //initialize the request
-        vim.open("GET", "http://data.foli.fi/siri/vm", true);
+        vim.open("GET", "https://data.foli.fi/siri/vm", true);
 
 
             //check if the request finished and response is ready
